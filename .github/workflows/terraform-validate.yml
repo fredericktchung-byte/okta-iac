@@ -16,7 +16,7 @@ on:
 
 env:
   # Threshold for large changes requiring additional scrutiny (percentage)
-  CHANGE_THRESHOLD_PERCENT: 100
+  CHANGE_THRESHOLD_PERCENT: 30
 
 jobs:
   terraform:
