@@ -13,10 +13,13 @@ on:
     paths:
       - '**.tf'
       - '.github/workflows/terraform-validate.yml'
-
+permissions:
+  pull-requests: write  # Allows the bot to add labels and comments to PRs
+  issues: write         # Allows the bot to interact with the issue API
+  contents: read        # Allows the bot to read your terraform code
 env:
   # Threshold for large changes requiring additional scrutiny (percentage)
-  CHANGE_THRESHOLD_PERCENT: 100
+  CHANGE_THRESHOLD_PERCENT: 30
 
 jobs:
   terraform:
