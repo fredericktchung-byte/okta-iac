@@ -1,0 +1,147 @@
+name: Terraform Validate and Format
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**.tf'
+      - '.github/workflows/terraform-validate.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - '**.tf'
+      - '.github/workflows/terraform-validate.yml'
+
+env:
+  # Threshold for large changes requiring additional scrutiny (percentage)
+  CHANGE_THRESHOLD_PERCENT: 100
+
+jobs:
+  terraform:
+    name: Validate and Format Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: latest
+
+      - name: Terraform Format Check
+        id: fmt
+        run: terraform fmt -check -recursive .
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: terraform init -backend=false
+        continue-on-error: true
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+
+      - name: Analyze change scope
+        id: change-analysis
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // Get PR details
+            const { data: prData } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+
+            const baseRef = prData.base.sha;
+            const headRef = prData.head.sha;
+
+            // Get diff stats
+            let addedLines = 0;
+            let deletedLines = 0;
+
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              per_page: 100,
+            });
+
+            files.forEach(file => {
+              if (file.filename.endsWith('.tf')) {
+                addedLines += file.additions || 0;
+                deletedLines += file.deletions || 0;
+              }
+            });
+
+            const totalChanges = addedLines + deletedLines;
+            const changeThreshold = parseInt(process.env.CHANGE_THRESHOLD_PERCENT);
+            
+            // For percentage calculation, compare changes against base + additions
+            const baselineSize = Math.max(totalChanges, 50); // Avoid division issues for small PRs
+            const changePercentage = (totalChanges / baselineSize) * 100;
+
+            console.log(`Total changes: +${addedLines}/-${deletedLines} lines`);
+            console.log(`Change percentage: ${changePercentage.toFixed(2)}%`);
+            console.log(`Threshold: ${changeThreshold}%`);
+
+            const requiresScrutiny = changePercentage > changeThreshold;
+
+            core.setOutput('total_added', addedLines);
+            core.setOutput('total_deleted', deletedLines);
+            core.setOutput('change_percentage', changePercentage.toFixed(2));
+            core.setOutput('requires_scrutiny', requiresScrutiny);
+
+      - name: Flag for scrutiny
+        if: github.event_name == 'pull_request' && steps.change-analysis.outputs.requires_scrutiny == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const changePercent = `${{ steps.change-analysis.outputs.change_percentage }}`;
+            const threshold = process.env.CHANGE_THRESHOLD_PERCENT;
+
+            // Add label
+            github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['terraform-requires-scrutiny'],
+            });
+
+            // Comment on PR
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `⚠️ **Large infrastructure change detected**\n\nThis PR modifies **${changePercent}%** of Terraform code, exceeding the scrutiny threshold of **${threshold}%**.\n\n### Required Actions:\n- [ ] Reviewer must verify all resource changes\n- [ ] Confirm no unintended resource destruction\n- [ ] Validate impact on active environments\n- [ ] Approve explicitly before merge\n\n**Recommendation:** Ensure this change has been thoroughly tested in a staging environment.`,
+            });
+
+      - name: Comment on PR (validation results)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const formatStatus = `${{ steps.fmt.outcome }}` === 'failure' ? '❌ Format check failed' : '✅ Format check passed';
+            const validateStatus = `${{ steps.validate.outcome }}` === 'failure' ? '❌ Validation failed' : '✅ Validation passed';
+            const scrutinyStatus = `${{ steps.change-analysis.outputs.requires_scrutiny }}` === 'true' ? '⚠️ Large change detected (see separate comment)' : '✅ Change scope within normal limits';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## Terraform Validation Report\n\n${formatStatus}\n${validateStatus}\n${scrutinyStatus}\n\n**Changes:** +${{ steps.change-analysis.outputs.total_added }} / -${{ steps.change-analysis.outputs.total_deleted }} lines\n\nRun \`terraform fmt -recursive .\` locally to fix any formatting issues.`
+            });
+
+      - name: Exit with failure if checks failed
+        if: steps.fmt.outcome == 'failure' || steps.validate.outcome == 'failure'
+        run: exit 1

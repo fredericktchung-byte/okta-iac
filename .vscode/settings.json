@@ -1,0 +1,7 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "git rev-list": true
+    },
+    "openvinoCode.model": "deepseek-coder",
+    "openvinoCode.device": "NPU"
+}
