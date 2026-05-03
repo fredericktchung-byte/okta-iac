@@ -1,6 +1,8 @@
 # ============================================================================
 # 📁 GLOBAL POLICY: PASSWORDLESS AUTHENTICATION
 # ============================================================================
+# This file defines the primary global sign-on policy for passwordless access.
+# It enables FastPass and FIDO2 authentication across the organization.
 
 resource "okta_policy_signon" "passwordless" {
   name            = "Passwordless - FastPass & FIDO2"
@@ -14,36 +16,32 @@ resource "okta_policy_signon" "passwordless" {
 # 🛡️ PASSWORDLESS RULES (Evaluated Top-Down)
 # ============================================================================
 
-# Priority 1: The Hard Boundary
+# Rule 1: Block proxy/VPN traffic (except iCloud)
 resource "okta_policy_rule_signon" "block_proxies_allow_icloud" {
   policy_id = okta_policy_signon.passwordless.id
   name      = "Block Detected Proxies & VPNs (Allow iCloud)"
   status    = "ACTIVE"
   priority  = 1
 
-  # FLATTENED NETWORK CONDITIONS
   network_connection = "ZONE"
   network_includes   = [okta_network_zone.proxy_check.id]
 
   access = "DENY"
 }
 
-# Priority 2: The Adaptive "Risk" Bouncer
+# Rule 2: Extra auth for high-risk sign-ins
 resource "okta_policy_rule_signon" "passwordless_high_risk" {
   policy_id = okta_policy_signon.passwordless.id
   name      = "Step-Up Auth for High Risk Sign-ins"
   status    = "ACTIVE"
   priority  = 2
 
-  # FLATTENED RISK CONDITION
   risk_level = "HIGH"
 
   access = "ALLOW"
-
-  # Future phase: Add strict MFA constraints here for risky logins
 }
 
-# Priority 3: The Default User Experience
+# Rule 3: Default - allow passwordless to everyone
 resource "okta_policy_rule_signon" "passwordless_default_rule" {
   policy_id = okta_policy_signon.passwordless.id
   name      = "Passwordless - All Users"
@@ -51,6 +49,4 @@ resource "okta_policy_rule_signon" "passwordless_default_rule" {
   priority  = 3
 
   access = "ALLOW"
-
-  # Future phase: Add FastPass/FIDO2 constraints here
 }

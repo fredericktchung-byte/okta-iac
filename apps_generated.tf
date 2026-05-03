@@ -1,7 +1,10 @@
-# __generated__ by Terraform
-# Please review these resources and move them into your main configuration files.
+# ============================================================================
+# 📱 AUTO-GENERATED APPLICATIONS
+# ============================================================================
+# These applications were exported from Okta's REST API. Please review and move
+# them into your main configuration files as needed.
 
-# __generated__ by Terraform
+# Okta Admin Console - Built-in application for Okta's administrative interface
 resource "okta_app_oauth" "okta_admin_console" {
   accessibility_error_redirect_url = null
   accessibility_login_redirect_url = null
@@ -51,7 +54,7 @@ resource "okta_app_oauth" "okta_admin_console" {
   wildcard_redirect                    = null
 }
 
-# __generated__ by Terraform
+# Okta OIN Submission Tester - Application for OIN submission testing
 resource "okta_app_oauth" "okta_oin_submission_tester" {
   accessibility_error_redirect_url = null
   accessibility_login_redirect_url = null
@@ -101,7 +104,7 @@ resource "okta_app_oauth" "okta_oin_submission_tester" {
   wildcard_redirect                    = null
 }
 
-# __generated__ by Terraform
+# Okta Workflows OAuth - OAuth application for Workflows integration
 resource "okta_app_oauth" "okta_workflows_oauth" {
   accessibility_error_redirect_url = null
   accessibility_login_redirect_url = null
@@ -154,7 +157,7 @@ resource "okta_app_oauth" "okta_workflows_oauth" {
   wildcard_redirect                    = null
 }
 
-# __generated__ by Terraform
+# Okta Dashboard - Built-in application for Okta's dashboard interface
 resource "okta_app_oauth" "okta_dashboard" {
   accessibility_error_redirect_url = null
   accessibility_login_redirect_url = null
@@ -204,7 +207,7 @@ resource "okta_app_oauth" "okta_dashboard" {
   wildcard_redirect                    = null
 }
 
-# __generated__ by Terraform
+# Okta Access Certification Reviews - Application for access certification review workflows
 resource "okta_app_oauth" "okta_access_certification_reviews" {
   accessibility_error_redirect_url = null
   accessibility_login_redirect_url = null
@@ -256,7 +259,7 @@ resource "okta_app_oauth" "okta_access_certification_reviews" {
   wildcard_redirect                    = null
 }
 
-# __generated__ by Terraform
+# Okta Browser Plugin - Built-in browser plugin application
 resource "okta_app_oauth" "okta_browser_plugin" {
   accessibility_error_redirect_url = null
   accessibility_login_redirect_url = null
@@ -306,7 +309,7 @@ resource "okta_app_oauth" "okta_browser_plugin" {
   wildcard_redirect                    = null
 }
 
-# __generated__ by Terraform
+# Okta Workflows - OIDC application for Workflows integration
 resource "okta_app_oauth" "okta_workflows" {
   accessibility_error_redirect_url = null
   accessibility_login_redirect_url = null

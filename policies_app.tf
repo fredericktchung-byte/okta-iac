@@ -1,3 +1,9 @@
+# ============================================================================
+# 📱 APPLICATION-SPECIFIC POLICIES
+# ============================================================================
+# This file contains application-specific sign-on policies and rules.
+# Most resources are auto-generated from Okta's REST API exports.
+# The name attribute on each rule explains its purpose.
 resource "okta_app_signon_policy" "any_two_factors" {
   name        = "Any two factors"
   description = "Default policy requiring any two factors for access."

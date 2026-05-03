@@ -1,3 +1,8 @@
+# ============================================================================
+# 👥 GROUP DEFINITIONS
+# ============================================================================
+# This file defines user groups used for policy scoping and access control.
+# Built-in Okta groups (Everyone, Administrators) are referenced but not managed here.
 resource "okta_group" "engineering" {
   name        = "Engineering"
   description = "Standard group for all Engineering staff"
@@ -17,7 +22,7 @@ resource "okta_group" "role_service_accounts" {
 resource "okta_group" "everyone" {
   name        = "Everyone"
   description = "All users in your organization"
-  # We use ignore_changes because Okta manages the membership of this group automatically
+  # Okta manages membership automatically
 }
 
 resource "okta_group" "okta_administrators" {
