@@ -19,3 +19,9 @@ variable "api_token" {
   description = "Okta API Token"
   sensitive   = true # Keeps token out of console logs
 }
+
+# This variable is used in identity_sources.tf to look up the primary admin user by email.
+variable "primary_admin_email" {
+  type        = string
+  description = "The Okta login/email of the primary administrator running this deployment."
+}
