@@ -1,3 +1,8 @@
+# =============================================================================
+# 📊 DATA SOURCES
+# =============================================================================
+# This file defines data sources used to query existing Okta resources.
+
 # 1. Query the Okta API for the built-in default policy
 data "okta_default_policy" "global_session" {
   type = "OKTA_SIGN_ON"

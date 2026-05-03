@@ -1,3 +1,8 @@
+# =============================================================================
+# 📥 INPUT VARIABLES
+# =============================================================================
+# This file defines input variables used across the Terraform configuration.
+
 variable "org_name" {
   type        = string
   description = "The prefix of your Okta Org URL"
@@ -7,5 +12,5 @@ variable "org_name" {
 variable "api_token" {
   type        = string
   description = "Okta API Token"
-  sensitive   = true # This prevents the token from printing in your console logs
+  sensitive   = true # Keeps token out of console logs
 }
