@@ -1,0 +1,9 @@
+# Git & Branching Workflow
+- NEVER commit directly to the 'main' or 'master' branches.
+- Before starting any task, check the current branch using `git branch --show-current`.
+- If on 'main', you MUST create a new branch before making any file changes.
+- Branch naming convention: [type](date MM/DD)[short-description]
+    - Types: feat, fix, docs, refactor, chore
+    - Example: docs/add-inline-comments-global-tf
+- Once work is complete, commit with a message following the Conventional Commits format (e.g., "docs: clarify policy logic in global.tf").
+- Do not attempt to merge the branch yourself; stop after pushing the branch or completing the commits.
