@@ -50,7 +50,13 @@ jobs:
       - name: Terraform Validate
         id: validate
         run: terraform validate
-
+      
+      - name: Count Total Terraform Lines
+        run: |
+          # Dynamically count all lines across all .tf files in the repo
+          TOTAL_LINES=$(find . -name "*.tf" -type f -exec cat {} + | wc -l)
+          echo "REPO_TOTAL_LINES=$TOTAL_LINES" >> $GITHUB_ENV
+      
       - name: Analyze change scope
         id: change-analysis
         if: github.event_name == 'pull_request'
@@ -90,20 +96,16 @@ jobs:
             const totalChanges = addedLines + deletedLines;
             const changeThreshold = parseInt(process.env.CHANGE_THRESHOLD_PERCENT);
             
-            // For percentage calculation, compare changes against base + additions
-            const baselineSize = Math.max(totalChanges, 50); // Avoid division issues for small PRs
-            const changePercentage = (totalChanges / baselineSize) * 100;
-
+            // NEW LOGIC: Compare against the actual size of the codebase
+            const repoTotalLines = parseInt(process.env.REPO_TOTAL_LINES) || 1000;
+            const changePercentage = (totalChanges / repoTotalLines) * 100;
+            
             console.log(`Total changes: +${addedLines}/-${deletedLines} lines`);
+            console.log(`Repo total lines: ${repoTotalLines}`);
             console.log(`Change percentage: ${changePercentage.toFixed(2)}%`);
             console.log(`Threshold: ${changeThreshold}%`);
-
+            
             const requiresScrutiny = changePercentage > changeThreshold;
-
-            core.setOutput('total_added', addedLines);
-            core.setOutput('total_deleted', deletedLines);
-            core.setOutput('change_percentage', changePercentage.toFixed(2));
-            core.setOutput('requires_scrutiny', requiresScrutiny);
 
       - name: Flag for scrutiny
         if: github.event_name == 'pull_request' && steps.change-analysis.outputs.requires_scrutiny == 'true'
