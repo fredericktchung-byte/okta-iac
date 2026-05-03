@@ -8,6 +8,11 @@ variable "org_name" {
   description = "The prefix of your Okta Org URL"
   default     = "integrator-1501452"
 }
+variable "base_url" {
+  type        = string
+  description = "The base URL for your Okta Org (e.g., https://dev-123456.okta.com)"
+  default     = "okta.com"
+}
 
 variable "api_token" {
   type        = string

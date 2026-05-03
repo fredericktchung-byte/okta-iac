@@ -1,19 +1,21 @@
 # =============================================================================
-# 🏗️ MAIN CONFIGURATION
+# 🔌 TERRAFORM PROVIDERS
 # =============================================================================
-# This file sets up the Terraform provider configuration for Okta.
 
 terraform {
+  # Ensures compatibility across different environments
+  required_version = ">= 1.0.0"
+
   required_providers {
     okta = {
       source  = "okta/okta"
-      version = "~> 6.6.0" # Compatible with v6.6.1+
+      version = "~> 6.6.0"
     }
   }
 }
 
 provider "okta" {
-  org_name  = "integrator-1501452"
-  base_url  = "okta.com" # Base URL for Okta API
+  org_name  = var.org_name
+  base_url  = var.base_url
   api_token = var.api_token
 }
