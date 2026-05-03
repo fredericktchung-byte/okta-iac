@@ -44,3 +44,19 @@ resource "okta_policy_rule_signon" "block_proxies" {
   access   = "DENY"
   priority = 1
 }
+
+# --- 3. AUTHENTICATORS ---
+
+# Enable Okta Verify (Push & TOTP)
+resource "okta_authenticator" "okta_verify" {
+  name   = "Okta Verify"
+  key    = "okta_verify"
+  status = "ACTIVE"
+}
+
+# Enable WebAuthn (FIDO2 / Biometrics / YubiKeys)
+resource "okta_authenticator" "webauthn" {
+  name   = "FIDO2 (WebAuthn)"
+  key    = "webauthn"
+  status = "ACTIVE"
+}
