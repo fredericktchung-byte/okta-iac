@@ -13,6 +13,7 @@ terraform {
 }
 
 provider "okta" {
-  org_name  = var.org_name
+  org_name  = "integrator-1501452"
+  base_url  = "okta.com" # Make sure this isn't empty!
   api_token = var.api_token
 }
