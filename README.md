@@ -26,6 +26,16 @@ This architecture follows a strict **4-Phase Deployment Strategy** to ensure a s
 * **Components:** Event Hooks, Inline Hooks, and automated provisioning rules (SCIM).
 * **Files:** `automation.tf`
 
+### Phase 5: Multi-Cloud Identity Federation (Roadmap)
+* **Objective:** Establish Okta as the central Identity Hub across multiple isolated cloud environments.
+* **Target Integrations:** * Oracle Cloud Infrastructure (OCI) via SAML/OIDC.
+  * Microsoft Entra ID (Developer Tenant) directory federation.
+
+### Phase 6: Advanced Governance & Privileged Access (Roadmap)
+* **Objective:** Implement Zero-Trust principles for infrastructure management.
+* **Target Architecture:**
+  * **Just-In-Time (JIT) Administration:** Transitioning from static Okta admin roles to dynamic, time-bound privilege elevation.
+  * **GitOps Maturation:** Hardening the GitHub Actions pipeline for secure token lifecycle management and automated state reconciliation without human credential exposure.
 ---
 
 ## 📂 Repository Structure
