@@ -20,8 +20,8 @@ resource "okta_policy_mfa" "default" {
   name        = "Default Policy"
   status      = "ACTIVE"
   description = "The default policy applies in all situations if no other policy applies."
-  
-  is_oie      = true
+
+  is_oie = true
 
   groups_included = ["00g1100e6nrqyrHst698"]
 }
