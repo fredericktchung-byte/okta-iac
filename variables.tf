@@ -44,3 +44,9 @@ variable "auth0_client_secret" {
   description = "The Client Secret from the Auth0 application"
   sensitive   = true
 }
+
+# This variable is used in apps.tf to configure the SAML application for Oracle Cloud Infrastructure (OCI).
+variable "oci_domain_id" {
+  type        = string
+  description = "The unique ID for the OCI Identity Domain (e.g., idcs-123456...)"
+}
