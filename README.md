@@ -15,6 +15,7 @@ This architecture follows a strict **4-Phase Deployment Strategy** to ensure a s
 * **Objective:** Define the "How."
 * **Components:** Network Zones, Authenticators (WebAuthn, Okta Verify), Global Session Policies, and Passwordless routing rules.
 * **Files:** `security_perimeter.tf`, `policies_global.tf`
+  *TF Managed - Proxy & VPN Zone in security_perimeter.tf blocks access from non-commercial VPNs and anonymizers, exclusing iCloud Private Relay, to reduce the attack surface for a threat actor. ICloud Private Relay is set as an exception to allow Apply devices to authenticate correctly.
 
 ### Phase 3: The Payload (Applications)
 * **Objective:** Define the "What."

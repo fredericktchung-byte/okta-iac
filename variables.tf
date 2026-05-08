@@ -27,3 +27,20 @@ variable "primary_admin_email" {
   type        = string
   description = "The Okta login/email of the primary administrator running this deployment."
 }
+
+# These variables are used in identity_providers.tf to configure the OIDC IdP for Auth0.
+variable "auth0_domain" {
+  type        = string
+  description = "The Auth0 tenant domain"
+}
+# The client ID and secret are used to authenticate Okta with Auth0 for the OIDC IdP configuration.
+variable "auth0_client_id" {
+  type        = string
+  description = "The Client ID from the Auth0 application"
+}
+# The client secret is marked as sensitive to prevent it from being exposed in logs or state files.
+variable "auth0_client_secret" {
+  type        = string
+  description = "The Client Secret from the Auth0 application"
+  sensitive   = true
+}
