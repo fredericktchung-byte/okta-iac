@@ -24,3 +24,12 @@ resource "okta_app_saml" "oracle_cloud" {
   honor_force_authn       = true
   authn_context_class_ref = "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport"
 }
+
+# Workato SAML Integration
+resource "okta_app_saml" "workato" {
+  label             = "Workato"
+  preconfigured_app = "workato"
+
+  # Because it's an OIN app, Okta automatically populates the SSO URLs, 
+  # Audience Restrictions, and standard Attribute Statements for you!
+}
