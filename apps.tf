@@ -34,6 +34,20 @@ resource "okta_app_saml" "workato" {
   # Audience Restrictions, and standard Attribute Statements for you!
 }
 
+# Salesforce SAML Integration
+# Salesforce's SAML configuration is notoriously complex and often requires custom attribute mappings and specific settings that may not be fully supported by the standard Okta SAML app. We onboard the application in the UI then import it into Terraform to manage the more intricate configurations that are necessary for a successful integration. This allows us to leverage Terraform's state management while accommodating Salesforce's unique requirements.
+resource "okta_app_saml" "salesforce" {
+  label             = "Salesforce"
+  preconfigured_app = "salesforce"
+
+  app_settings_json = jsonencode({
+    instanceType    = "PRODUCTION"
+    integrationType = "STANDARD"
+    loginUrl        = "https://orgfarm-4cab0d731f-dev-ed.develop.my.salesforce.com"
+    logoutUrl       = "https://orgfarm-4cab0d731f-dev-ed.develop.my.salesforce.com/services/auth/sp/saml2/logout"
+  })
+}
+
 # =============================================================================
 # 🤖 MACHINE-TO-MACHINE (Phase 3 -> Phase 4 Bridge)
 # =============================================================================
