@@ -48,6 +48,16 @@ resource "okta_app_saml" "salesforce" {
   })
 }
 
+# Tines SAML Integration
+resource "okta_app_saml" "tines" {
+  label             = "Tines"
+  preconfigured_app = "tinescom"
+  app_settings_json = jsonencode({
+    tenantUrl = "https://lingering-dream-8343.tines.com" }
+  )
+}
+
+
 # =============================================================================
 # 🤖 MACHINE-TO-MACHINE (Phase 3 -> Phase 4 Bridge)
 # =============================================================================
