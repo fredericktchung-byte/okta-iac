@@ -11,16 +11,16 @@ This architecture follows a strict **4-Phase Deployment Strategy** to ensure a s
 * **Components:** Core Groups, Group Rules, Custom Profile Attributes, and Directory Integrations.
 * **Files:** `identity_sources.tf`
 
-### Phase 2: The Perimeter (Security & Authentication)
-* **Objective:** Define the "How."
-* **Components:** Network Zones, Authenticators (WebAuthn, Okta Verify), Global Session Policies, and Passwordless routing rules.
-* **Files:** `security_perimeter.tf`, `policies_global.tf`
-  *TF Managed - Proxy & VPN Zone in security_perimeter.tf blocks access from non-commercial VPNs and anonymizers, exclusing iCloud Private Relay, to reduce the attack surface for a threat actor. ICloud Private Relay is set as an exception to allow Apply devices to authenticate correctly.
+## Phase 2: The Perimeter (Security & Authentication)
+- **Objective:** Define the "How."
+- **Components:** Network Zones, Authenticators (WebAuthn, Okta Verify), Global Session Policies, MFA Enrollment, and IdP Routing.
+- **Files:** `security_perimeter.tf`, `policies_global.tf`, `policies_enrollment.tf`, `identity_providers.tf`
+  > **Note:** The Proxy & VPN Zone in `security_perimeter.tf` blocks access from non-commercial VPNs and anonymizers, excluding iCloud Private Relay, to reduce the attack surface. iCloud Private Relay is set as an exception to allow Apple devices to authenticate correctly.
 
-### Phase 3: The Payload (Applications)
-* **Objective:** Define the "What."
-* **Components:** SAML/OIDC Application definitions, App Sign-On Policies, and Group assignments.
-* **Files:** `apps.tf`, `policies_app.tf`
+## Phase 3: The Payload (Applications)
+- **Objective:** Define the "What."
+- **Components:** SAML/OIDC Application definitions, Zero-Trust App Sign-On Policies (Passwordless), and Group assignments.
+- **Files:** `apps.tf`, `policies_authentication.tf`
 
 ### Phase 4: The Engine (Lifecycle & Automation)
 * **Objective:** Define the "When."

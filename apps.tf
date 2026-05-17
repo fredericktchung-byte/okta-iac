@@ -5,11 +5,11 @@
 # Oracle Cloud Infrastructure (OCI) SAML Integration
 resource "okta_app_saml" "oracle_cloud" {
   label = "Oracle Cloud Infrastructure (OCI)"
-
-  # The SSO Destination Endpoints
-  sso_url     = "https://${var.oci_domain_id}.identity.oraclecloud.com/fed/v1/sp/sso"
-  recipient   = "https://${var.oci_domain_id}.identity.oraclecloud.com/fed/v1/sp/sso"
-  destination = "https://${var.oci_domain_id}.identity.oraclecloud.com/fed/v1/sp/sso"
+  # Binds this specific app to the Zero-Trust Phishing Resistant policy
+  authentication_policy = okta_app_signon_policy.passwordless.id # The SSO Destination Endpoints
+  sso_url               = "https://${var.oci_domain_id}.identity.oraclecloud.com/fed/v1/sp/sso"
+  recipient             = "https://${var.oci_domain_id}.identity.oraclecloud.com/fed/v1/sp/sso"
+  destination           = "https://${var.oci_domain_id}.identity.oraclecloud.com/fed/v1/sp/sso"
 
   # The strict Entity ID / Provider ID expected by Oracle
   audience = "https://${var.oci_domain_id}.identity.oraclecloud.com:443/fed"
@@ -29,7 +29,8 @@ resource "okta_app_saml" "oracle_cloud" {
 resource "okta_app_saml" "workato" {
   label             = "Workato"
   preconfigured_app = "workato"
-
+  # Binds this specific app to the Zero-Trust Phishing Resistant policy
+  authentication_policy = okta_app_signon_policy.passwordless.id
   # Because it's an OIN app, Okta automatically populates the SSO URLs, 
   # Audience Restrictions, and standard Attribute Statements for you!
 }
@@ -39,7 +40,8 @@ resource "okta_app_saml" "workato" {
 resource "okta_app_saml" "salesforce" {
   label             = "Salesforce"
   preconfigured_app = "salesforce"
-
+  # Binds this specific app to the Zero-Trust Phishing Resistant policy
+  authentication_policy = okta_app_signon_policy.passwordless.id
   app_settings_json = jsonencode({
     instanceType    = "PRODUCTION"
     integrationType = "STANDARD"
@@ -52,6 +54,8 @@ resource "okta_app_saml" "salesforce" {
 resource "okta_app_saml" "tines" {
   label             = "Tines"
   preconfigured_app = "tinescom"
+  # Binds this specific app to the Zero-Trust Phishing Resistant policy
+  authentication_policy = okta_app_signon_policy.passwordless.id
   app_settings_json = jsonencode({
     tenantUrl = "https://lingering-dream-8343.tines.com" }
   )
