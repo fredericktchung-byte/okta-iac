@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 
 // 1. Read the public key from your local file
-const publicKeyPem = fs.readFileSync('../workato_public.pem', 'utf8');
+const publicKeyPem = fs.readFileSync('../tines_public.pem', 'utf8');
 
 // 2. Parse the key using Node's native cryptography module
 const publicKey = crypto.createPublicKey(publicKeyPem);
