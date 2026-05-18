@@ -50,3 +50,23 @@ variable "oci_domain_id" {
   type        = string
   description = "The unique ID for the OCI Identity Domain (e.g., idcs-123456...)"
 }
+
+# Workato JWKS values (these are static since we generated the key pair ourselves and can hardcode them)
+variable "workato_jwks_e" {
+  type        = string
+  description = "Exponent for the Workato RSA key (part of JWKS configuration)"
+}
+variable "workato_jwks_n" {
+  type        = string
+  description = "Modulus for the Workato RSA key (part of JWKS configuration)"
+}
+
+# Tines JWKS values (these should be generated from the Tines public key)
+variable "tines_jwks_e" {
+  type        = string
+  description = "Exponent for the Tines RSA key (part of JWKS configuration)"
+}
+variable "tines_jwks_n" {
+  type        = string
+  description = "Modulus for the Tines RSA key (part of JWKS configuration)"
+}

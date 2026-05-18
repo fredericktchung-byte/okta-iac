@@ -79,14 +79,46 @@ resource "okta_app_oauth" "workato_m2m" {
   jwks {
     kty = "RSA"
     kid = "5IzcQecwWliLbmPGx9bVD7UTYgIx/ulP9jYW4BQRGe0=" # A unique identifier we make up
-    e   = "AQAB"
-    n   = "0f1NLP5rqh9HhEcopXri0OcUaTKy65U6y5JaKfRZ4vniEPK8WlPDJOCxCZZ-VSYT439VsFEM-DUyFiG7CdX5G-JijFF2AeIZ5k1CDo8rn_e-cBN-0-PjKFvV-xGA4If1QckyCKSMLp2hcAUUqzrVa1W5hf-8dHV3YAp4DOU4eyb5rUcncBX0MH3w0ashOjG7vdYz0xAsfGVwjjgyg5QS9rAdwDR5gyj6OGr7Jni7WMy6a-er34ZMfgdSDc65SVr7Sxr_MRlRdZW-ZNINfvCEWhVYKhVWw0Gk9sn4kL5mgvnztiTVPMrBGDETJUF6GUol3afZiTfKDunskcgQSExKyQ"
+    e   = var.workato_jwks_e
+    n   = var.workato_jwks_n
   }
 }
 
 # Authorize the M2M App to manage Okta Directory components
 resource "okta_app_oauth_api_scope" "workato_scopes" {
   app_id = okta_app_oauth.workato_m2m.id
+  issuer = "https://integrator-1501452.okta.com"
+  scopes = [
+    "okta.users.manage",
+    "okta.groups.manage",
+    "okta.schemas.read",
+    "okta.logs.read",
+    "okta.eventHooks.manage",
+    "okta.apps.read"
+  ]
+}
+
+# Tines API Access Application (OIDC / Client Credentials)
+resource "okta_app_oauth" "tines_m2m" {
+  label       = "Tines API Integration"
+  type        = "service"
+  grant_types = ["client_credentials"]
+
+  # Enforcing high-security cryptographic authentication
+  token_endpoint_auth_method = "private_key_jwt"
+
+  # Injecting the Public Key for Okta to verify Tines' signature
+  jwks {
+    kid = "tines-key-1" # A unique identifier we make up
+    kty = "RSA"
+    n   = var.tines_jwks_n
+    e   = var.tines_jwks_e
+  }
+}
+
+# Authorize the M2M App to manage Okta Directory components
+resource "okta_app_oauth_api_scope" "tines_scopes" {
+  app_id = okta_app_oauth.tines_m2m.id
   issuer = "https://integrator-1501452.okta.com"
   scopes = [
     "okta.users.manage",
