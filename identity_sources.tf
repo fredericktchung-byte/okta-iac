@@ -32,10 +32,10 @@ resource "okta_group" "super_admins" {
 }
 
 # 4. A Test User (For validating policies in Phase 2)
-resource "okta_user" "test_engineer" {
-  first_name = "Test"
-  last_name  = "Engineer"
-  login      = "test.engineer@example.com"
-  email      = "test.engineer@example.com"
+resource "okta_user" "asuka_langley" {
+  first_name = "Asuka"
+  last_name  = "Langley"
+  login      = "asuka.langley@test.local"
+  email      = "asuka.langley@test.local"
   status     = "ACTIVE"
 }
