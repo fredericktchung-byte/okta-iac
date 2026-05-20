@@ -22,6 +22,49 @@ resource "okta_network_zone" "proxy_check" {
   ]
 }
 
+# Dynamic Zone: High-Risk Geographies
+resource "okta_network_zone" "high_risk_countries" {
+  name   = "TF Managed - High-Risk Countries"
+  type   = "DYNAMIC"
+  usage  = "BLOCKLIST"
+  status = "ACTIVE"
+
+  # Define countries via ISO-3166-1 Alpha-2 codes
+  dynamic_locations = [
+    "IR", # Iran
+    "KP", # North Korea
+    "RU", # Russia
+    "VE", # Venezuela
+    "SO", # Somalia
+    "SD", # Sudan
+    "SY", # Syria
+    "YE"  # Yemen
+  ]
+}
+
+# Dynamic Blocklist managed by Tines SOAR
+resource "okta_network_zone" "threat_intel_ips" {
+  # id     = "nzo137zq0zyTv9XgO698"
+  name   = "SOAR Managed - Threat Intel Blocklist"
+  type   = "IP"
+  usage  = "BLOCKLIST"
+  status = "ACTIVE"
+
+  # Initial loopback dummy IP to satisfy the provider schema
+  gateways = ["127.0.0.1/32"]
+
+  # CRITICAL: Prevent Terraform state drift when Tines updates the IPs
+  lifecycle {
+    ignore_changes = [gateways]
+  }
+}
+
+# Output the Zone ID so you can easily copy it into your Tines webhook
+output "threat_intel_zone_id" {
+  value       = okta_network_zone.threat_intel_ips.id
+  description = "The ID of the Network Zone for Tines to update via API"
+}
+
 # --- 2. GLOBAL SESSION POLICY ---
 
 # The overarching policy container
