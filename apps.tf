@@ -126,6 +126,8 @@ resource "okta_app_oauth_api_scope" "tines_scopes" {
     "okta.schemas.read",
     "okta.logs.read",
     "okta.eventHooks.manage",
-    "okta.apps.read"
+    "okta.apps.read",
+    "okta.networkZones.manage",
+    "okta.networkZones.read"
   ]
 }
