@@ -3,6 +3,24 @@
 # -----------------------------------------------------------------------------
 # This file defines app-specific authentication policies that override global policies.
 
+# Rule for Bookmark App Policy that allows authentication with no MFA requirement, as long as the user has a valid global session. This is critical for ensuring that users can access bookmark apps without unnecessary friction, while still maintaining security through the global session. By setting the factor mode to "2FA" but not requiring any specific factors, we allow users to authenticate using their existing session without being forced into additional MFA prompts for these less sensitive applications.
+resource "okta_app_signon_policy" "bookmark_apps" {
+  name        = "Bookmark & Redirect Apps"
+  description = "Relaxed policy for Bookmark Apps to prevent double prompting."
+}
+
+resource "okta_app_signon_policy_rule" "allow_with_session" {
+  policy_id = okta_app_signon_policy.bookmark_apps.id
+  name      = "Allow access with active session"
+  access    = "ALLOW"
+
+  # OIE Assurance setting: Require only 1 factor. 
+  # If the user is clicking from the Okta dashboard, their existing 
+  # session token satisfies this instantly without an MFA step-up.
+  type        = "ASSURANCE"
+  factor_mode = "1FA"
+}
+
 # Passwordless & FIDO2 Policy for SAML Apps
 resource "okta_app_signon_policy" "passwordless" {
   catch_all   = true
