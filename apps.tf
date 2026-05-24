@@ -35,19 +35,63 @@ resource "okta_app_saml" "workato" {
   # Audience Restrictions, and standard Attribute Statements for you!
 }
 
-# Salesforce SAML Integration
+# Salesforce SAML Integration for SSO only (not provisioning)
 # Salesforce's SAML configuration is notoriously complex and often requires custom attribute mappings and specific settings that may not be fully supported by the standard Okta SAML app. We onboard the application in the UI then import it into Terraform to manage the more intricate configurations that are necessary for a successful integration. This allows us to leverage Terraform's state management while accommodating Salesforce's unique requirements.
 resource "okta_app_saml" "salesforce" {
   label             = "Salesforce"
   preconfigured_app = "salesforce"
   # Binds this specific app to the Zero-Trust Phishing Resistant policy
   authentication_policy = okta_app_signon_policy.passwordless.id
+  # Salesforce requires the NameID to be the Salesforce User ID, which is a custom attribute we need to map from Okta. This is a common point of failure in Salesforce SAML integrations, so we need to ensure it's configured correctly.
+  user_name_template      = "user.salesforceId"
+  user_name_template_type = "CUSTOM"
   app_settings_json = jsonencode({
     instanceType    = "PRODUCTION"
     integrationType = "STANDARD"
     loginUrl        = "https://orgfarm-4cab0d731f-dev-ed.develop.my.salesforce.com"
     logoutUrl       = "https://orgfarm-4cab0d731f-dev-ed.develop.my.salesforce.com/services/auth/sp/saml2/logout"
   })
+}
+
+# Salesforce outbound provisioning integration (SCIM) for users mastered by Okta but need access to Salesforce. This is a separate app from the SAML SSO integration because it serves a different purpose and may require different configurations. By creating a separate app for outbound provisioning, we can ensure that users who are mastered in Okta can be provisioned into Salesforce with the appropriate attributes and group memberships, while still managing it through Terraform.
+resource "okta_app_saml" "salesforce_provisioning" {
+  label                 = "Salesforce SCIM Outbound Provisioning"
+  preconfigured_app     = "salesforce"
+  authentication_policy = okta_app_signon_policy.passwordless.id
+  hide_web              = true # Hides the app from users since it's only for provisioning
+  hide_ios              = true # This app is only for provisioning, so we don't bind it to the authentication policy
+  app_settings_json = jsonencode({
+    scimBaseUrl     = "https://orgfarm-4cab0d731f-dev-ed.develop.my.salesforce.com/services/scim/v2"
+    scimAuthType    = "OAUTH2"
+    instanceType    = "PRODUCTION"
+    integrationType = "STANDARD"
+  })
+  lifecycle {
+    ignore_changes = [
+      app_settings_json
+    ]
+  }
+}
+
+# Salesforce inbound provisioning integration (SCIM) for users mastered by Salesforce but still need access to Okta-managed resources. This is a separate app from the SAML SSO integration because it serves a different purpose and may require different configurations. By creating a separate app for inbound provisioning, we can ensure that users who are mastered in Salesforce can be provisioned into Okta with the appropriate attributes and group memberships, while still managing it through Terraform.
+resource "okta_app_saml" "salesforce_inbound_provisioning" {
+  label                 = "Salesforce SCIM Inbound Provisioning"
+  preconfigured_app     = "salesforce"
+  authentication_policy = okta_app_signon_policy.passwordless.id
+  hide_ios              = true # Hides the app from users since it's only for provisioning
+  hide_web              = true # Hides the app from users since it's only for provisioning
+  # This app is only for provisioning, so we don't bind it to the authentication policy
+  app_settings_json = jsonencode({
+    scimBaseUrl     = "https://orgfarm-4cab0d731f-dev-ed.develop.my.salesforce.com/services/scim/v2"
+    scimAuthType    = "OAUTH2"
+    instanceType    = "PRODUCTION"
+    integrationType = "STANDARD"
+  })
+  lifecycle {
+    ignore_changes = [
+      app_settings_json
+    ]
+  }
 }
 
 # Tines SAML Integration
