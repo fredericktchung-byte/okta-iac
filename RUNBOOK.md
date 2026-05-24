@@ -27,6 +27,18 @@ API Token Rotation: The OKTA_API_TOKEN used for deployment is treated as a highl
 
 Separation of Duties: Direct manipulation of the Okta Admin Console is discouraged. All configuration changes should originate as Pull Requests in this repository to maintain a verifiable audit log.
 
+### 🤖 Non-Human Identity (NHI) & Agentic AI Governance
+Autonomous agents, service accounts, and machine workloads are strictly prohibited from utilizing human attribute registries (e.g., `employeeNumber` fields must remain NULL):
+* **Context Isolation:** All machine identities must map to the explicit `userType: Service Account` parameter inside the core directory to ensure complete isolation from human User Behavior Analytics (UBA) baselines.
+* **Cryptographic Lineage:** Every active agent or automation worker must carry an attribution attribute mapping directly to its parent infrastructure deployment or human architect (`appuser.OwnerID`), creating an un-spoofable auditing trail for automated programmatic changes.
+
+### 🔑 Privileged Access & Secrets Management (Production Scaling)
+To maintain strict credential isolation within a production enterprise topology, this environment must evolve to decouple all long-lived administrative secrets from the local codebase:
+* **Infrastructure Pipeline Injection:** Static variables and high-privilege tokens (such as the Tines-to-Okta API handshake or emergency deployment vectors) must be migrated to a centralized Secrets Manager (e.g., HashiCorp Vault or AWS Secrets Manager). Secrets must be dynamically injected into the short-lived runtime memory of the execution agent via secure environment vectors (`TF_VAR_*`), ensuring cleartext credentials never touch version control.
+* **Just-In-Time (JIT) Break-Glass Protection:** Human emergency backup administrative profiles created natively within core directories (like Salesforce or Okta) should not hold static passwords. These identities must be anchored within a Privileged Access Management (PAM) vault enforcing a checkout workflow, automated incident ticket correlation, and aggressive, API-driven password rotation upon session termination.
+
+
+
 ## 3. 🩺 Known Issues & Troubleshooting
 Pipeline / Terraform Plan Hangs Indefinitely (5+ Minutes)
 Symptom: The terraform plan command freezes without throwing an immediate error.
