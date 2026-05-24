@@ -39,3 +39,38 @@ resource "okta_group" "app_salesforce_inbound_provisioning_users" {
   description               = "Assigns inbound provisioning access from Salesforce"
   name                      = "App - Salesforce Inbound Provisioning - Users"
 }
+
+# Atlassian application assignment group
+resource "okta_group" "app_atlassian_users" {
+  name        = "App - Atlassian - Users"
+  description = "Group for users assigned to Atlassian applications like Jira and Confluence"
+}
+# Confluence admin group
+resource "okta_group" "confluence_admins" {
+  name        = "App - Confluence - Admins"
+  description = "Group for users with admin access to Confluence"
+}
+
+# Confluence contractor group
+resource "okta_group" "confluence_contractors" {
+  name        = "App - Confluence - Contractors"
+  description = "Group for users with contractor access to Confluence"
+}
+
+# Jira user group
+resource "okta_group" "jira_users" {
+  name        = "App - Jira - Users"
+  description = "Group for users assigned to the Jira application"
+}
+
+# Autodesk application assignment group
+resource "okta_group" "app_autodesk_users" {
+  name        = "App - Autodesk - Users"
+  description = "Group for users assigned to the Autodesk application"
+}
+
+# Github application assignment group
+resource "okta_group" "app_github_users" {
+  name        = "App - Github - Users"
+  description = "Group for users assigned to the Github application"
+}

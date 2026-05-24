@@ -35,6 +35,65 @@ resource "okta_app_saml" "workato" {
   # Audience Restrictions, and standard Attribute Statements for you!
 }
 
+# Atlassian Bookmark Integration
+resource "okta_app_bookmark" "atlassian" {
+  label                 = "Atlassian"
+  authentication_policy = okta_app_signon_policy.bookmark_apps.id # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
+  url                   = "https://fredericktchung.atlassian.net" # This is the URL users will be directed to when they click the bookmark in Okta. It can be the generic login page since our authentication policy will allow access with an active session, preventing double prompts.
+}
+
+# Atlassian application group assignment
+resource "okta_app_group_assignment" "atlassian_users" {
+  app_id   = okta_app_bookmark.atlassian.id
+  group_id = okta_group.app_atlassian_users.id
+}
+
+# Jira Bookmark Integration
+resource "okta_app_bookmark" "jira" {
+  label                 = "Jira"
+  authentication_policy = okta_app_signon_policy.bookmark_apps.id      # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
+  url                   = "https://fredericktchung.atlassian.net/jira" # This is the URL users will be directed to when they click the bookmark in Okta. It can be the generic login page since our authentication policy will allow access with an active session, preventing double prompts.
+}
+
+# Jira application group assignment
+resource "okta_app_group_assignment" "jira_users" {
+  app_id   = okta_app_bookmark.jira.id
+  group_id = okta_group.jira_users.id
+}
+
+# Confluence Bookmark Integration
+resource "okta_app_bookmark" "confluence" {
+  label = "Confluence"
+  url   = "https://fredericktchung.atlassian.net/wiki" # Update with your domain
+
+  # Bind the app to our new relaxed authentication policy
+  authentication_policy = okta_app_signon_policy.bookmark_apps.id
+}
+
+# Assign the app to your Administrator group
+resource "okta_app_group_assignment" "confluence_admins" {
+  app_id   = okta_app_bookmark.confluence.id
+  group_id = okta_group.confluence_admins.id # Ensure this matches your admin group resource name
+}
+
+# Assign the app to your Contractor group
+resource "okta_app_group_assignment" "confluence_contractors" {
+  app_id   = okta_app_bookmark.confluence.id
+  group_id = okta_group.confluence_contractors.id # Ensure this matches your contractor group resource name
+}
+
+# Autodesk Bookmark Integration
+resource "okta_app_bookmark" "autodesk" {
+  label = "Autodesk"
+  url   = "https://signin.autodesk.com"
+}
+
+# Autodesk application group assignment
+resource "okta_app_group_assignment" "autodesk_users" {
+  app_id   = okta_app_bookmark.autodesk.id
+  group_id = okta_group.app_autodesk_users.id
+}
+
 # Salesforce SAML Integration for SSO only (not provisioning)
 # Salesforce's SAML configuration is notoriously complex and often requires custom attribute mappings and specific settings that may not be fully supported by the standard Okta SAML app. We onboard the application in the UI then import it into Terraform to manage the more intricate configurations that are necessary for a successful integration. This allows us to leverage Terraform's state management while accommodating Salesforce's unique requirements.
 resource "okta_app_saml" "salesforce" {
@@ -174,4 +233,17 @@ resource "okta_app_oauth_api_scope" "tines_scopes" {
     "okta.networkZones.manage",
     "okta.networkZones.read"
   ]
+}
+
+# Github Bookmark Integration
+resource "okta_app_bookmark" "github" {
+  label                 = "GitHub"
+  url                   = "https://github.com/fredericktchung-byte" # This is the URL users will be directed to when they click the bookmark in Okta. It can be the generic login page since our authentication policy will allow access with an active session, preventing double prompts.
+  authentication_policy = okta_app_signon_policy.bookmark_apps.id   # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
+}
+
+# GitHub application group assignment
+resource "okta_app_group_assignment" "github_users" {
+  app_id   = okta_app_bookmark.github.id
+  group_id = okta_group.app_github_users.id
 }

@@ -28,8 +28,8 @@ resource "okta_policy_rule_signon" "step_up" {
   network_connection  = "ANYWHERE"
   primary_factor      = "PASSWORD_IDP_ANY_FACTOR"
   priority            = 1
-  session_idle        = 120
-  session_lifetime    = 120
+  session_idle        = 720
+  session_lifetime    = 720
   session_persistent  = false
   status              = "ACTIVE"
 }
@@ -47,8 +47,8 @@ resource "okta_policy_rule_signon" "passwordless_all" {
   network_connection  = "ANYWHERE"
   primary_factor      = "PASSWORD_IDP_ANY_FACTOR"
   priority            = 2
-  session_idle        = 120
-  session_lifetime    = 120
+  session_idle        = 720
+  session_lifetime    = 720
   session_persistent  = false
   status              = "ACTIVE"
 }
