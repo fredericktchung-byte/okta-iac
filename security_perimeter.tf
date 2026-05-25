@@ -64,19 +64,6 @@ output "threat_intel_zone_id" {
   value       = okta_network_zone.threat_intel_ips.id
   description = "The ID of the Network Zone for Tines to update via API"
 }
-
-# --- 2. GLOBAL SESSION POLICY ---
-
-# The overarching policy container
-resource "okta_policy_signon" "global_secure" {
-  name        = "Global Security Perimeter"
-  status      = "ACTIVE"
-  description = "Baseline security policy. Mastered in Okta via Terraform."
-
-  # Lock in the 'Everyone' group to prevent detachment
-  groups_included = ["00g1100e6nrqyrHst698"]
-}
-
 # --- 3. AUTHENTICATORS ---
 
 # Enable Okta Verify (Push & TOTP)
