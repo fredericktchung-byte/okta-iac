@@ -262,3 +262,20 @@ resource "okta_app_group_assignment" "slack_users" {
   app_id   = okta_app_bookmark.slack.id
   group_id = okta_group.app_slack_users.id
 }
+
+# Databricks SAML Integration
+resource "okta_app_saml" "databricks" {
+  label             = "Databricks"
+  preconfigured_app = "databricks"
+  # Binds this specific app to the Zero-Trust Phishing Resistant policy
+  authentication_policy = okta_app_signon_policy.passwordless.id
+  app_settings_json = jsonencode({
+    databricksSamlUrl = "https://dbc-7c4fe004-0fdd.cloud.databricks.com/saml/consume" }
+  )
+}
+
+# Databricks application group assignment
+resource "okta_app_group_assignment" "databricks_users" {
+  app_id   = okta_app_saml.databricks.id
+  group_id = okta_group.app_databricks_users.id
+}

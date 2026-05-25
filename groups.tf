@@ -80,3 +80,9 @@ resource "okta_group" "app_slack_users" {
   name        = "App - Slack - Users"
   description = "Group for users assigned to the Slack application"
 }
+
+# Databricks application assignment group
+resource "okta_group" "app_databricks_users" {
+  name        = "App - Databricks - Users"
+  description = "Group for users assigned to the Databricks application"
+}
