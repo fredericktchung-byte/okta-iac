@@ -74,3 +74,9 @@ resource "okta_group" "app_github_users" {
   name        = "App - Github - Users"
   description = "Group for users assigned to the Github application"
 }
+
+# Slack application assignment group
+resource "okta_group" "app_slack_users" {
+  name        = "App - Slack - Users"
+  description = "Group for users assigned to the Slack application"
+}

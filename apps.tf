@@ -84,8 +84,10 @@ resource "okta_app_group_assignment" "confluence_contractors" {
 
 # Autodesk Bookmark Integration
 resource "okta_app_bookmark" "autodesk" {
-  label = "Autodesk"
-  url   = "https://signin.autodesk.com"
+  label                 = "Autodesk"
+  url                   = "https://signin.autodesk.com"
+  authentication_policy = okta_app_signon_policy.bookmark_apps.id # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
+
 }
 
 # Autodesk application group assignment
@@ -246,4 +248,17 @@ resource "okta_app_bookmark" "github" {
 resource "okta_app_group_assignment" "github_users" {
   app_id   = okta_app_bookmark.github.id
   group_id = okta_group.app_github_users.id
+}
+
+# Slack bookmark integration
+resource "okta_app_bookmark" "slack" {
+  label                 = "Slack"
+  url                   = "https://app.slack.com"                 # This is the URL users will be directed to when they click the bookmark in Okta. It can be the generic login page since our authentication policy will allow access with an active session, preventing double prompts.
+  authentication_policy = okta_app_signon_policy.bookmark_apps.id # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
+}
+
+# Slack application group assignment
+resource "okta_app_group_assignment" "slack_users" {
+  app_id   = okta_app_bookmark.slack.id
+  group_id = okta_group.app_slack_users.id
 }
