@@ -7,18 +7,21 @@
 resource "okta_app_signon_policy" "bookmark_apps" {
   name        = "Bookmark & Redirect Apps"
   description = "Relaxed policy for Bookmark Apps to prevent double prompting."
+  # id              = "rst13d08iqdYEGx9r698"
 }
 
 resource "okta_app_signon_policy_rule" "allow_with_session" {
-  policy_id = okta_app_signon_policy.bookmark_apps.id
-  name      = "Allow access with active session"
-  access    = "ALLOW"
-
-  # OIE Assurance setting: Require only 1 factor. 
-  # If the user is clicking from the Okta dashboard, their existing 
-  # session token satisfies this instantly without an MFA step-up.
-  type        = "ASSURANCE"
+  access      = "ALLOW"
   factor_mode = "1FA"
+  # id                          = "rul13d05tzdism38u698"
+  name                        = "Allow access with active session"
+  network_connection          = "ANYWHERE"
+  policy_id                   = "rst13d08iqdYEGx9r698"
+  priority                    = 0
+  re_authentication_frequency = "PT43800H"
+  risk_score                  = "ANY"
+  status                      = "ACTIVE"
+  type                        = "ASSURANCE"
 }
 
 # Passwordless & FIDO2 Policy for SAML Apps
