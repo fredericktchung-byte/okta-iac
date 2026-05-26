@@ -86,3 +86,9 @@ resource "okta_group" "app_databricks_users" {
   name        = "App - Databricks - Users"
   description = "Group for users assigned to the Databricks application"
 }
+
+# HubSpot application assignment group
+resource "okta_group" "app_hubspot_users" {
+  name        = "App - HubSpot - Users"
+  description = "Group for users assigned to the HubSpot application"
+}
