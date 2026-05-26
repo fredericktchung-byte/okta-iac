@@ -4,7 +4,7 @@ This repository contains the Infrastructure as Code (IaC) configurations for man
 
 ## 🏗️ Deployment Methodology
 
-This architecture follows a strict **4-Phase Deployment Strategy** to ensure a secure, zero-friction rollout. The repository structure mirrors these phases to maintain clear separation of duties and simplify security audits.
+This architecture follows a phased deployment strategy to ensure a secure, zero-friction rollout. The repository structure mirrors these phases to maintain clear separation of duties and simplify security audits.
 
 ### Phase 1: The Foundation (Identity Sources)
 * **Objective:** Define the "Who."
