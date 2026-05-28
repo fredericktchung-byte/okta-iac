@@ -92,3 +92,9 @@ resource "okta_group" "app_hubspot_users" {
   name        = "App - HubSpot - Users"
   description = "Group for users assigned to the HubSpot application"
 }
+
+# AirTable application assignment group
+resource "okta_group" "app_airtable_users" {
+  name        = "App - AirTable - Users"
+  description = "Group for users assigned to the AirTable application"
+}
