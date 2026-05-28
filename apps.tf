@@ -286,3 +286,29 @@ resource "okta_app_bookmark" "hubspot" {
   url                   = "https://app-na2.hubspot.com/global-home/246304908" # This is the URL users will be directed to when they click the bookmark in Okta. It can be the generic login page since our authentication policy will allow access with an active session, preventing double prompts.
   authentication_policy = okta_app_signon_policy.bookmark_apps.id             # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
 }
+
+# AirTable Bookmark Integration
+resource "okta_app_bookmark" "airtable" {
+  label                 = "AirTable"
+  url                   = "https://airtable.com"                  # This is the URL users will be directed to when they click the bookmark in Okta. It can be the generic login page since our authentication policy will allow access with an active session, preventing double prompts.
+  authentication_policy = okta_app_signon_policy.bookmark_apps.id # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
+}
+
+# AirTable application group assignment
+resource "okta_app_group_assignment" "airtable_users" {
+  app_id   = okta_app_bookmark.airtable.id
+  group_id = okta_group.app_airtable_users.id
+}
+
+# Bitwarden Bookmark Integration
+resource "okta_app_bookmark" "bitwarden" {
+  label                 = "Bitwarden"
+  url                   = "https://vault.bitwarden.com"           # This is the URL users will be directed to when they click the bookmark in Okta. It can be the generic login page since our authentication policy will allow access with an active session, preventing double prompts.
+  authentication_policy = okta_app_signon_policy.bookmark_apps.id # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
+}
+
+# Bitwarden application group assignment
+resource "okta_app_group_assignment" "bitwarden_users" {
+  app_id   = okta_app_bookmark.bitwarden.id
+  group_id = okta_group.app_bitwarden_users.id
+}

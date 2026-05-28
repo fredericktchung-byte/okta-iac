@@ -98,3 +98,9 @@ resource "okta_group" "app_airtable_users" {
   name        = "App - AirTable - Users"
   description = "Group for users assigned to the AirTable application"
 }
+
+# Bitwarden application assignment group
+resource "okta_group" "app_bitwarden_users" {
+  name        = "App - Bitwarden - Users"
+  description = "Group for users assigned to the Bitwarden application"
+}
