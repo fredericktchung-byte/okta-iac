@@ -63,10 +63,10 @@ resource "okta_group" "jira_users" {
   description = "Group for users assigned to the Jira application"
 }
 
-# Autodesk application assignment group
+# Autodesk Platform Services application assignment group
 resource "okta_group" "app_autodesk_users" {
-  name        = "App - Autodesk - Users"
-  description = "Group for users assigned to the Autodesk application"
+  name        = "App - Autodesk Platform Services - Users"
+  description = "Group for users assigned to the Autodesk Platform Services application"
 }
 
 # Github application assignment group
