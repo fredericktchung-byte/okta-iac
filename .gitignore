@@ -41,3 +41,6 @@ terraform.rc
 
 # Ignore .pem files which may contain sensitive private keys
 *.pem
+
+# Ignore .oci folder which may contain sensitive OCI configuration files
+.oci/
