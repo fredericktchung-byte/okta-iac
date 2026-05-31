@@ -22,6 +22,31 @@ This architecture follows a phased deployment strategy to ensure a secure, zero-
 - **Components:** SAML/OIDC Application definitions, Zero-Trust App Sign-On Policies (Passwordless), and Group assignments.
 - **Files:** `apps.tf`, `policies_authentication.tf`
 
+## 🚦 GitHub Branch Protection and CI Governance
+This repository is governed by a branch protection policy implemented as part of Jira issue **OKTA-18**.
+- `main` is protected and changes must be made through pull requests.
+- Pull requests require the GitHub Actions workflow in `.github/workflows/terraform-validate.yml` to pass.
+- This workflow validates `terraform fmt -recursive .` and `terraform validate` for all `.tf` changes.
+- The policy is designed to enforce review, maintain Terraform formatting, and prevent direct merges to the protected branch.
+
+## 🧑‍💻 Local Development
+Use these commands before opening a pull request to keep local changes aligned with CI expectations:
+```bash
+terraform fmt -recursive .
+terraform init -backend=false
+terraform validate
+```
+- Confirm your `TF_VAR_api_token` or equivalent environment variable is set before running Terraform.
+- For full backend usage, configure OCI credentials and run `terraform init` without `-backend=false` when working against the shared state.
+
+## 🌐 Terraform State Backend
+The Terraform configuration is anchored to a remote OCI backend in `providers.tf`:
+- OCI bucket: `okta-iac-terraform-state`
+- Region: `us-sanjose-1`
+- State key: `prod/terraform.tfstate`
+
+This ensures shared state management and reduces the risk of local-state drift.
+
 ### Phase 4: The Engine (Lifecycle & Automation)
 * **Objective:** Define the "When."
 * **Components:** Event Hooks, Inline Hooks, and automated provisioning rules (SCIM).

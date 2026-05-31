@@ -1,8 +1,8 @@
 # =============================================================================
-# 🛡️ SECURITY PERIMETER (Phase 2)
+# 🛡️ SECURITY PERIMETER
 # =============================================================================
 
-# --- 1. NETWORK ZONES ---
+# --- NETWORK ZONES ---
 
 # Dynamic Zone: Tenant-level Blocklist
 resource "okta_network_zone" "proxy_check" {
