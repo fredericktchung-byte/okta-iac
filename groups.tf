@@ -104,3 +104,21 @@ resource "okta_group" "app_bitwarden_users" {
   name        = "App - Bitwarden - Users"
   description = "Group for users assigned to the Bitwarden application"
 }
+
+# Grafana Admin application assignment group
+resource "okta_group" "app_grafana_admins" {
+  name        = "App - Grafana - Admins"
+  description = "Group for users with admin access to Grafana"
+}
+
+# Grafana Editors application assignment group
+resource "okta_group" "app_grafana_editors" {
+  name        = "App - Grafana - Editors"
+  description = "Group for users with editor access to Grafana"
+}
+
+# Grafana Viewers application assignment group
+resource "okta_group" "app_grafana_viewers" {
+  name        = "App - Grafana - Viewers"
+  description = "Group for users with viewer access to Grafana"
+}
