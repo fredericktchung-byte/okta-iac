@@ -312,3 +312,51 @@ resource "okta_app_group_assignment" "bitwarden_users" {
   app_id   = okta_app_bookmark.bitwarden.id
   group_id = okta_group.app_bitwarden_users.id
 }
+
+# Grafana OIDC Integration
+resource "okta_app_oauth" "grafana" {
+  authentication_policy = okta_app_signon_policy.passwordless.id # Binds this specific app to the Zero-Trust Phishing Resistant policy
+  client_id             = "0oa13lds0aqH7ZH1X698"
+  label                 = "Grafana"
+  post_logout_redirect_uris = [
+    "https://fredericktchungbyte.grafana.net/logout",
+  ]
+  profile = null
+  redirect_uris = [
+    "https://fredericktchungbyte.grafana.net/login/okta",
+  ]
+  refresh_token_rotation = "STATIC"
+  response_types = [
+    "code",
+  ]
+  status                     = "ACTIVE"
+  token_endpoint_auth_method = "client_secret_basic"
+  type                       = "web"
+  hide_web                   = false
+  login_mode                 = "SPEC"
+  login_uri                  = "https://fredericktchungbyte.grafana.net/login"
+  groups_claim {
+    filter_type = "REGEX"
+    name        = "groups"
+    type        = "FILTER"
+    value       = ".*"
+  }
+}
+
+# Grafana Admins application group assignment
+resource "okta_app_group_assignment" "grafana_admins" {
+  app_id   = okta_app_oauth.grafana.id
+  group_id = okta_group.app_grafana_admins.id
+}
+
+# Grafana Editors application group assignment
+resource "okta_app_group_assignment" "grafana_editors" {
+  app_id   = okta_app_oauth.grafana.id
+  group_id = okta_group.app_grafana_editors.id
+}
+
+# Grafana Viewers application group assignment
+resource "okta_app_group_assignment" "grafana_viewers" {
+  app_id   = okta_app_oauth.grafana.id
+  group_id = okta_group.app_grafana_viewers.id
+}
