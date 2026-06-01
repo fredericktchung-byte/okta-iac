@@ -370,3 +370,9 @@ resource "okta_app_bookmark" "notion" {
   url                   = "https://app.notion.com/p/Welcome-to-Notion-37201dd05b8280d8b475ea3294aeda36" # This is the URL users will be directed to when they click the bookmark in Okta. It can be the generic login page since our authentication policy will allow access with an active session, preventing double prompts.
   authentication_policy = okta_app_signon_policy.bookmark_apps.id                                       # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
 }
+
+# Notion application group assignment
+resource "okta_app_group_assignment" "notion_users" {
+  app_id   = okta_app_bookmark.notion.id
+  group_id = okta_group.app_notion_users.id
+}
