@@ -176,6 +176,7 @@ resource "okta_app_oauth" "workato_m2m" {
   label       = "Workato API Integration"
   type        = "service"
   grant_types = ["client_credentials"]
+  issuer_mode = "DYNAMIC"
 
   # Enforcing high-security cryptographic authentication
   token_endpoint_auth_method = "private_key_jwt"
@@ -208,6 +209,7 @@ resource "okta_app_oauth" "tines_m2m" {
   label       = "Tines API Integration"
   type        = "service"
   grant_types = ["client_credentials"]
+  issuer_mode = "DYNAMIC"
 
   # Enforcing high-security cryptographic authentication
   token_endpoint_auth_method = "private_key_jwt"
@@ -335,6 +337,7 @@ resource "okta_app_oauth" "grafana" {
   hide_web                   = false
   login_mode                 = "SPEC"
   login_uri                  = "https://fredericktchungbyte.grafana.net/login"
+  issuer_mode                = "DYNAMIC"
   groups_claim {
     filter_type = "REGEX"
     name        = "groups"

@@ -1,0 +1,44 @@
+name: CD - Terraform Apply
+
+# Injecting the secrets required by your Terraform providers and OCI Backend
+env:
+    OKTA_API_TOKEN: ${{ secrets.OKTA_API_TOKEN }}
+    OCI_PRIVATE_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
+    OCI_TENANCY_OCID: ${{ secrets.OCI_TENANCY_OCID }}
+    OCI_USER_OCID: ${{ secrets.OCI_USER_OCID }}
+    OCI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
+    OCI_REGION: ${{ secrets.OCI_REGION }}
+    OCI_PRIVATE_KEY_PATH: ${{ runner.temp }}/oci_api_key.pem
+    
+# Trigger: Runs automatically when a PR is merged (pushed) to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform-apply:
+    name: 'Terraform Apply'
+    runs-on: ubuntu-latest
+    
+    # Injecting the secrets required by your Terraform providers
+    env:
+      OKTA_API_TOKEN: ${{ secrets.OKTA_API_TOKEN }}
+      OCI_PRIVATE_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
+
+    steps:
+      # 1. Pulls your repository code into the GitHub runner
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Installs the Terraform CLI
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      # 3. Initializes the Terraform working directory and downloads providers
+      - name: Terraform Init
+        run: terraform init
+
+      # 4. Applies the configuration directly to your Okta tenant
+      - name: Terraform Apply
+        run: terraform apply -auto-approve

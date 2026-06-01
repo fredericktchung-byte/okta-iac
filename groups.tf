@@ -57,7 +57,7 @@ resource "okta_group" "confluence_contractors" {
   description = "Group for users with contractor access to Confluence"
 }
 
-# Jira user group
+# Jira application assignment group
 resource "okta_group" "jira_users" {
   name        = "App - Jira - Users"
   description = "Group for users assigned to the Jira application"
