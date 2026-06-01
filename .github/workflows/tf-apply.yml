@@ -2,7 +2,7 @@ name: CD - Terraform Apply
 
 # Injecting the secrets required by your Terraform providers and OCI Backend
 env:
-    OKTA_API_TOKEN: ${{ secrets.OKTA_API_TOKEN }}
+    TF_VAR_api_token: ${{ secrets.OKTA_API_TOKEN }}
     
 # Trigger: Runs automatically when a PR is merged (pushed) to the main branch
 on:
@@ -53,4 +53,4 @@ jobs:
 
       # 5. Applies the configuration directly to your Okta tenant
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -input=false
