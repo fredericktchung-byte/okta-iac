@@ -2,7 +2,15 @@ name: CD - Terraform Apply
 
 # Injecting the secrets required by your Terraform providers and OCI Backend
 env:
-    TF_VAR_api_token: ${{ secrets.OKTA_API_TOKEN }}
+  # Provider Secrets
+  TF_VAR_api_token: ${{ secrets.OKTA_API_TOKEN }}
+  
+  # Sensitive Variable Secrets
+  TF_VAR_auth0_client_secret: ${{ secrets.AUTH0_CLIENT_SECRET }}
+  TF_VAR_workato_jwks_e: ${{ secrets.WORKATO_JWKS_E }}
+  TF_VAR_workato_jwks_n: ${{ secrets.WORKATO_JWKS_N }}
+  TF_VAR_tines_jwks_e: ${{ secrets.TINES_JWKS_E }}
+  TF_VAR_tines_jwks_n: ${{ secrets.TINES_JWKS_N }}
     
 # Trigger: Runs automatically when a PR is merged (pushed) to the main branch
 on:
