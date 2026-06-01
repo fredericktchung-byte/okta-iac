@@ -17,8 +17,7 @@ jobs:
       OCI_USER_OCID: ${{ secrets.OCI_USER_OCID }}
       OCI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
       OCI_REGION: ${{ secrets.OCI_REGION }}
-      OCI_PRIVATE_KEY_PATH: ${{ runner.temp }}/oci_api_key.pem
-
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,11 +25,11 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # NEW STEP: Write the raw secret string to a temporary file
       - name: Write OCI Private Key
         run: |
           echo "${{ secrets.OCI_PRIVATE_KEY }}" > ${{ runner.temp }}/oci_api_key.pem
           chmod 600 ${{ runner.temp }}/oci_api_key.pem
+          echo "OCI_PRIVATE_KEY_PATH=${{ runner.temp }}/oci_api_key.pem" >> $GITHUB_ENV
 
       - name: Terraform Init
         id: init

@@ -128,3 +128,15 @@ resource "okta_group" "app_notion_users" {
   name        = "App - Notion - Users"
   description = "Group for users assigned to the Notion bookmarkapplication"
 }
+
+# Figma application assignment group
+resource "okta_group" "app_figma_users" {
+  name        = "App - Figma - Users"
+  description = "Group for users assigned to the Figma application"
+}
+
+# Google Cloud Platform application assignment group
+resource "okta_group" "app_gcp_users" {
+  name        = "App - Google Cloud Platform - Users"
+  description = "Group for users assigned to the Google Cloud Platform application"
+}
