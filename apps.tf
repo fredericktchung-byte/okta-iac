@@ -376,3 +376,5 @@ resource "okta_app_group_assignment" "notion_users" {
   app_id   = okta_app_bookmark.notion.id
   group_id = okta_group.app_notion_users.id
 }
+
+# =============================================================================

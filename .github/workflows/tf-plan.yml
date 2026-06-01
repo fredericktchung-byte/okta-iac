@@ -9,15 +9,14 @@ jobs:
   terraform-plan:
     name: 'Terraform Plan'
     runs-on: ubuntu-latest
+
+    # Injecting the secrets required by your Terraform providers# Explicitly grant the GITHUB_TOKEN permission to post PR comments
+    permissions:
+      pull-requests: write
     
     # Updated to point to the file path instead of the raw string
     env:
-      OKTA_API_TOKEN: ${{ secrets.OKTA_API_TOKEN }}
-      OCI_TENANCY_OCID: ${{ secrets.OCI_TENANCY_OCID }}
-      OCI_USER_OCID: ${{ secrets.OCI_USER_OCID }}
-      OCI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
-      OCI_REGION: ${{ secrets.OCI_REGION }}
-      OCI_PRIVATE_KEY_PATH: ${{ runner.temp }}/oci_api_key.pem
+      TF_VAR_api_token: ${{ secrets.OKTA_API_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -26,14 +25,25 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # NEW STEP: Write the raw secret string to a temporary file
-      - name: Write OCI Private Key
+      - name: Setup OCI Configuration
         run: |
-          echo "${{ secrets.OCI_PRIVATE_KEY }}" > ${{ runner.temp }}/oci_api_key.pem
-          chmod 600 ${{ runner.temp }}/oci_api_key.pem
+          mkdir -p ~/.oci
+          
+          # Write the private key
+          echo "${{ secrets.OCI_PRIVATE_KEY }}" > ~/.oci/oci_api_key.pem
+          chmod 600 ~/.oci/oci_api_key.pem
+          
+          # Generate the config file that Terraform expects by default
+          cat <<EOF > ~/.oci/config
+          [DEFAULT]
+          user=${{ secrets.OCI_USER_OCID }}
+          fingerprint=${{ secrets.OCI_FINGERPRINT }}
+          tenancy=${{ secrets.OCI_TENANCY_OCID }}
+          region=${{ secrets.OCI_REGION }}
+          key_file=/home/runner/.oci/oci_api_key.pem
+          EOF
 
       - name: Terraform Init
-        id: init
         run: terraform init
 
       - name: Terraform Format
@@ -46,7 +56,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color
+        run: terraform plan -no-color -input=false
         continue-on-error: true 
 
       - name: Post Plan to PR
