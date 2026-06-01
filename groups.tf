@@ -122,3 +122,9 @@ resource "okta_group" "app_grafana_viewers" {
   name        = "App - Grafana - Viewers"
   description = "Group for users with viewer access to Grafana"
 }
+
+# Notion application assignment group
+resource "okta_group" "app_notion_users" {
+  name        = "App - Notion - Users"
+  description = "Group for users assigned to the Notion bookmarkapplication"
+}
