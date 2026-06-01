@@ -3,11 +3,6 @@ name: CD - Terraform Apply
 # Injecting the secrets required by your Terraform providers and OCI Backend
 env:
     OKTA_API_TOKEN: ${{ secrets.OKTA_API_TOKEN }}
-    OCI_PRIVATE_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
-    OCI_TENANCY_OCID: ${{ secrets.OCI_TENANCY_OCID }}
-    OCI_USER_OCID: ${{ secrets.OCI_USER_OCID }}
-    OCI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
-    OCI_REGION: ${{ secrets.OCI_REGION }}
     
 # Trigger: Runs automatically when a PR is merged (pushed) to the main branch
 on:
@@ -35,13 +30,24 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       # 3. Writes the OCI private key from the GitHub secret to a temporary file and sets the path as an environment variable for Terraform
-      - name: Write OCI Private Key
+      - name: Setup OCI Configuration
         run: |
-          echo "${{ secrets.OCI_PRIVATE_KEY }}" > ${{ runner.temp }}/oci_api_key.pem
-          chmod 600 ${{ runner.temp }}/oci_api_key.pem
-          echo "OCI_PRIVATE_KEY_PATH=${{ runner.temp }}/oci_api_key.pem" >> $GITHUB_ENV
+          mkdir -p ~/.oci
+          
+          # Write the private key
+          echo "${{ secrets.OCI_PRIVATE_KEY }}" > ~/.oci/oci_api_key.pem
+          chmod 600 ~/.oci/oci_api_key.pem
+          
+          # Generate the config file that Terraform expects by default
+          cat <<EOF > ~/.oci/config
+          [DEFAULT]
+          user=${{ secrets.OCI_USER_OCID }}
+          fingerprint=${{ secrets.OCI_FINGERPRINT }}
+          tenancy=${{ secrets.OCI_TENANCY_OCID }}
+          region=${{ secrets.OCI_REGION }}
+          key_file=/home/runner/.oci/oci_api_key.pem
+          EOF
 
-      # 4. Initializes the Terraform working directory and downloads providers
       - name: Terraform Init
         run: terraform init
 

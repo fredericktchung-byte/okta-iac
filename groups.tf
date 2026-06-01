@@ -140,3 +140,9 @@ resource "okta_group" "app_gcp_users" {
   name        = "App - Google Cloud Platform - Users"
   description = "Group for users assigned to the Google Cloud Platform application"
 }
+
+# Zapier application assignment group
+resource "okta_group" "app_zapier_users" {
+  name        = "App - Zapier - Users"
+  description = "Group for users assigned to the Zapier application"
+}
