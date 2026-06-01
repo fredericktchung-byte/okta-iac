@@ -150,5 +150,5 @@ resource "okta_group" "app_zapier_users" {
 # Canvas application assignment group
 resource "okta_group" "app_canvas_users" {
   name        = "App - Canvas - Users"
-  description = "Group for users assigned to the Canvas application"
+  description = "Group for users assigned to the Canvas bookmark application"
 }

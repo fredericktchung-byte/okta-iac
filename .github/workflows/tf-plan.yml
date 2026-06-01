@@ -9,6 +9,10 @@ jobs:
   terraform-plan:
     name: 'Terraform Plan'
     runs-on: ubuntu-latest
+
+    # Injecting the secrets required by your Terraform providers# Explicitly grant the GITHUB_TOKEN permission to post PR comments
+    permissions:
+      pull-requests: write
     
     # Updated to point to the file path instead of the raw string
     env:
