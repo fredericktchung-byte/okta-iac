@@ -409,9 +409,3 @@ resource "okta_app_bookmark" "canva" {
   url                   = "https://www.canva.com/design"          # This is the URL users will be directed to when they click the bookmark in Okta. It can be the generic login page since our authentication policy will allow access with an active session, preventing double prompts.
   authentication_policy = okta_app_signon_policy.bookmark_apps.id # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
 }
-
-# Canva application group assignment
-resource "okta_app_group_assignment" "canva_users" {
-  app_id   = okta_app_bookmark.canva.id
-  group_id = okta_group.app_canva_users.id
-}
