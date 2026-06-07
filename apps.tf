@@ -423,7 +423,6 @@ resource "okta_app_oauth" "cloudflare" {
   # Satisfies the provider's requirement for the schema
   type = "web"
 
-  # Restores the OIN-specific settings that were about to be deleted
   app_settings_json = jsonencode({
     app = {
       team_domain = "dry-violet-c576"
@@ -435,7 +434,17 @@ resource "okta_app_oauth" "cloudflare" {
   # preventing the ForceNew destruction of the application.
   lifecycle {
     ignore_changes = [
-      type
+      type,
+      auto_key_rotation,
+      consent_method,
+      issuer_mode,
+      login_mode,
+      omit_secret,
+      refresh_token_leeway,
+      refresh_token_rotation,
+      skip_authentication_policy,
+      token_endpoint_auth_method,
+      wildcard_redirect
     ]
   }
 }
