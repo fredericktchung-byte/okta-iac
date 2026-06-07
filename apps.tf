@@ -418,9 +418,26 @@ resource "okta_app_group_assignment" "canva_users" {
 
 # Cloudflare OIDC Integration
 resource "okta_app_oauth" "cloudflare" {
-  label                 = "Cloudflare One"
-  authentication_policy = okta_app_signon_policy.passwordless.id # Binds this specific app to the Zero-Trust Phishing Resistant policy
-  type                  = "web"
+  label = "Cloudflare One"
+
+  # Satisfies the provider's requirement for the schema
+  type = "web"
+
+  # Restores the OIN-specific settings that were about to be deleted
+  app_settings_json = jsonencode({
+    app = {
+      team_domain = "dry-violet-c576"
+    }
+    manualProvisioning = false
+  })
+
+  # Instructs Terraform to ignore the type mismatch between the code and the state,
+  # preventing the ForceNew destruction of the application.
+  lifecycle {
+    ignore_changes = [
+      type
+    ]
+  }
 }
 
 # Cloudflare application group assignment
