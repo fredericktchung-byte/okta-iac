@@ -423,10 +423,22 @@ resource "okta_app_oauth" "cloudflare" {
   type                  = "web"
 }
 
+# Cloudflare application group assignment
+resource "okta_app_group_assignment" "cloudflare_users" {
+  app_id   = okta_app_oauth.cloudflare.id
+  group_id = okta_group.app_cloudflare_users.id
+}
+
 # Cloudflare SCIM Integration
 resource "okta_app_saml" "cloudflare_scim" {
   label                 = "Cloudflare SCIM"
   authentication_policy = okta_app_signon_policy.passwordless.id # Binds this specific app to the Zero-Trust Phishing Resistant policy
   hide_web              = true                                   # Hides the app from users since it's only for provisioning  
   hide_ios              = true                                   # Hides the app from users since it's only for provisioning
+}
+
+# Cloudflare SCIM application group assignment. Uses the same group assigned to the Oauth Cloudflare One app.
+resource "okta_app_group_assignment" "cloudflare_scim_users" {
+  app_id   = okta_app_saml.cloudflare_scim.id
+  group_id = okta_group.app_cloudflare_users.id
 }
