@@ -415,3 +415,18 @@ resource "okta_app_group_assignment" "canva_users" {
   app_id   = okta_app_bookmark.canva.id
   group_id = okta_group.app_canva_users.id
 }
+
+# Cloudflare OIDC Integration
+resource "okta_app_oauth" "cloudflare" {
+  label                 = "Cloudflare One"
+  authentication_policy = okta_app_signon_policy.passwordless.id # Binds this specific app to the Zero-Trust Phishing Resistant policy
+  type                  = "web"
+}
+
+# Cloudflare SCIM Integration
+resource "okta_app_saml" "cloudflare_scim" {
+  label                 = "Cloudflare SCIM"
+  authentication_policy = okta_app_signon_policy.passwordless.id # Binds this specific app to the Zero-Trust Phishing Resistant policy
+  hide_web              = true                                   # Hides the app from users since it's only for provisioning  
+  hide_ios              = true                                   # Hides the app from users since it's only for provisioning
+}

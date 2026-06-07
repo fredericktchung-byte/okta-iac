@@ -18,7 +18,8 @@ resource "okta_network_zone" "proxy_check" {
 
   # 2. THE EXCEPTION: Carve Apple out
   ip_service_categories_exclude = [
-    "APPLE_ICLOUD_RELAY_PROXY"
+    "APPLE_ICLOUD_RELAY_PROXY",
+    "WARP_VPN"
   ]
 }
 

@@ -152,3 +152,9 @@ resource "okta_group" "app_canva_users" {
   name        = "App - Canva - Users"
   description = "Group for users assigned to the Canva application"
 }
+
+# Cloudflare application assignment group
+resource "okta_group" "app_cloudflare_users" {
+  name        = "App - Cloudflare - Users"
+  description = "Group for users assigned to the Cloudflare application"
+}
