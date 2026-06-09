@@ -158,3 +158,9 @@ resource "okta_group" "app_cloudflare_users" {
   name        = "App - Cloudflare - Users"
   description = "Group for users assigned to the Cloudflare application"
 }
+
+# LimaCharlie application assignment group
+resource "okta_group" "app_limacharlie_users" {
+  name        = "App - LimaCharlie - Users"
+  description = "Group for users assigned to the LimaCharlie application"
+}
