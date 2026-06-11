@@ -169,4 +169,14 @@ resource "okta_group" "app_limacharlie_users" {
 resource "okta_group" "app_google_workspace_users" {
   name        = "App - Google Workspace - Users"
   description = "Group for users assigned to the Google Workspace application"
+# Groq bookmark application assignment group
+resource "okta_group" "app_groq_users" {
+  name        = "App - Groq - Users"
+  description = "Group for users assigned to the Groq bookmark application"
+}
+
+# You.com bookmark application assignment group
+resource "okta_group" "app_youcom_users" {
+  name        = "App - You.com - Users"
+  description = "Group for users assigned to the You.com bookmark application"
 }
