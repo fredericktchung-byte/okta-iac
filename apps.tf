@@ -488,6 +488,11 @@ resource "okta_app_bookmark" "google_workspace" {
   url                   = "https://workspace.google.com/dashboard" # This is the URL users will be directed to when they click the bookmark in Okta. It can be the generic login page since our authentication policy will allow access with an active session, preventing double prompts.
   authentication_policy = okta_app_signon_policy.bookmark_apps.id  # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
 }
+# Google Workspace application group assignment
+resource "okta_app_group_assignment" "google_workspace_users" {
+  app_id   = okta_app_bookmark.google_workspace.id
+  group_id = okta_group.app_google_workspace_users.id
+}
 
 # Groq bookmark integration
 resource "okta_app_bookmark" "groq" {
@@ -496,6 +501,13 @@ resource "okta_app_bookmark" "groq" {
   authentication_policy = okta_app_signon_policy.bookmark_apps.id # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
 }
 
+# Groq application group assignment
+resource "okta_app_group_assignment" "groq_users" {
+  app_id   = okta_app_bookmark.groq.id
+  group_id = okta_group.app_groq_users.id
+}
+
+
 # You.com bookmark integration
 resource "okta_app_bookmark" "youcom" {
   label                 = "You.com"
@@ -503,9 +515,22 @@ resource "okta_app_bookmark" "youcom" {
   authentication_policy = okta_app_signon_policy.bookmark_apps.id # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
 }
 
+# You.com application group assignment
+resource "okta_app_group_assignment" "youcom_users" {
+  app_id   = okta_app_bookmark.youcom.id
+  group_id = okta_group.app_youcom_users.id
+}
+
 # Apollo.io bookmark integration
 resource "okta_app_bookmark" "apollo" {
   label                 = "Apollo.io"
   url                   = "https://app.apollo.io/#/login"         # This is the URL users will be directed to when they click the bookmark in Okta. It can be the generic login page since our authentication policy will allow access with an active session, preventing double prompts.
+  authentication_policy = okta_app_signon_policy.bookmark_apps.id # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
+}
+
+# Google Cloud Platform (GCP) bookmark integration
+resource "okta_app_bookmark" "gcp" {
+  label                 = "Google Cloud Platform"
+  url                   = "https://console.cloud.google.com"      # This is the URL users will be directed to when they click the bookmark in Okta. It can be the generic login page since our authentication policy will allow access with an active session, preventing double prompts.
   authentication_policy = okta_app_signon_policy.bookmark_apps.id # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
 }
