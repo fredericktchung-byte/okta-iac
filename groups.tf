@@ -182,3 +182,15 @@ resource "okta_group" "app_youcom_users" {
   name        = "App - You.com - Users"
   description = "Group for users assigned to the You.com bookmark application"
 }
+
+# Google Cloud Platform bookmark application assignment group
+resource "okta_group" "app_gcp_bookmark_users" {
+  name        = "App - Google Cloud Platform Bookmark - Users"
+  description = "Group for users assigned to the Google Cloud Platform bookmark application"
+}
+
+# Apollo GraphQL application assignment group
+resource "okta_group" "app_apollo_users" {
+  name        = "App - Apollo GraphQL - Users"
+  description = "Group for users assigned to the Apollo GraphQL application"
+}
