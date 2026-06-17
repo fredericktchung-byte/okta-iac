@@ -194,3 +194,9 @@ resource "okta_group" "app_apollo_users" {
   name        = "App - Apollo GraphQL - Users"
   description = "Group for users assigned to the Apollo GraphQL application"
 }
+
+# ReTool application assignment group
+resource "okta_group" "app_retool_users" {
+  name        = "App - ReTool - Users"
+  description = "Group for users assigned to the ReTool application"
+}
