@@ -35,6 +35,13 @@ resource "okta_app_saml" "workato" {
   # Audience Restrictions, and standard Attribute Statements for you!
 }
 
+# Workato application group assignment
+resource "okta_app_group_assignment" "workato_users" {
+  app_id   = okta_app_saml.workato.id
+  group_id = okta_group.app_workato_users.id
+}
+
+
 # Atlassian Bookmark Integration
 resource "okta_app_bookmark" "atlassian" {
   label                 = "Atlassian"
@@ -533,4 +540,35 @@ resource "okta_app_bookmark" "gcp" {
   label                 = "Google Cloud Platform"
   url                   = "https://console.cloud.google.com"      # This is the URL users will be directed to when they click the bookmark in Okta. It can be the generic login page since our authentication policy will allow access with an active session, preventing double prompts.
   authentication_policy = okta_app_signon_policy.bookmark_apps.id # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
+}
+
+# Google Cloud Platform (GCP) application group assignment
+resource "okta_app_group_assignment" "gcp_users" {
+  app_id   = okta_app_bookmark.gcp.id
+  group_id = okta_group.app_gcp_users.id
+}
+
+# ReTool bookmark integration
+resource "okta_app_bookmark" "retool" {
+  label                 = "ReTool"
+  url                   = "https://chunglabs.retool.com/login"    # This is the URL users will be directed to when they click the bookmark in Okta. It can be the generic login page since our authentication policy will allow access with an active session, preventing double prompts.
+  authentication_policy = okta_app_signon_policy.bookmark_apps.id # Binds the bookmark app to the relaxed policy that allows access with an active session, preventing double prompts for users who are already authenticated to Okta.
+}
+
+# Workato Apps SAML Integration
+resource "okta_app_saml" "workato_apps" {
+  label                    = "Workato Apps"
+  assertion_signed         = true
+  audience                 = "https://id.trial.workato.com/portal/api/workspaces/etvUFEi8EkkznYea9GT2Xw/sso/saml/metadata"
+  authn_context_class_ref  = "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport"
+  destination              = "https://id.trial.workato.com/portal/api/workspaces/etvUFEi8EkkznYea9GT2Xw/sso/saml/acs"
+  digest_algorithm         = "SHA256"
+  honor_force_authn        = true
+  recipient                = "https://id.trial.workato.com/portal/api/workspaces/etvUFEi8EkkznYea9GT2Xw/sso/saml/acs"
+  response_signed          = true
+  signature_algorithm      = "RSA_SHA256"
+  sso_url                  = "https://id.trial.workato.com/portal/api/workspaces/etvUFEi8EkkznYea9GT2Xw/sso/saml/acs"
+  subject_name_id_format   = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
+  subject_name_id_template = "$${user.userName}"
+  authentication_policy    = okta_app_signon_policy.passwordless.id # Binds this specific app to the Zero-Trust Phishing Resistant policy
 }
