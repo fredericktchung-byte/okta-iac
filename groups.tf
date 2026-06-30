@@ -200,3 +200,9 @@ resource "okta_group" "app_retool_users" {
   name        = "App - ReTool - Users"
   description = "Group for users assigned to the ReTool application"
 }
+
+# Modified authenticator enrollment group for users who have been assigned the "Modified Authenticator Enrollment" policy in Okta.
+resource "okta_group" "modified_authenticator_enrollment" {
+  name        = "Okta - Policy - Modified Authenticator Enrollment"
+  description = "Group for users assigned the Modified Authenticator Enrollment policy in Okta"
+}
